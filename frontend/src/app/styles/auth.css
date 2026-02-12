@@ -1,0 +1,48 @@
+/* Fond gris */
+.auth-page {
+  background-color: #dedede;
+  min-height: 100vh;
+}
+
+.educhat {
+    position: absolute;
+    top: 20px;
+    left: 30px;
+
+    font-size: 28px;
+    font-weight: bold;
+    color: #000000; /* ton vert */
+
+    margin: 0;
+}
+
+
+/* Carte */
+.auth-card {
+  background: white;
+  padding: 32px;
+  width: 420px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+/* Inputs personnalisés */
+.auth-input {
+  background-color: #f9fafb;
+  border-radius: 10px;
+  height: 44px;
+  border: 2px solid #e5e7eb;
+}
+
+/* Bouton vert */
+.auth-button {
+  background-color: #43a047;
+  color: white;
+  border-radius: 10px;
+  height: 44px;
+  font-weight: 500;
+}
+
+.auth-button:hover {
+  background-color: #388e3c;
+}
