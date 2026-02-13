@@ -5,15 +5,15 @@
 }
 
 .educhat {
-    position: absolute;
-    top: 20px;
-    left: 30px;
+  position: absolute;
+  top: 20px;
+  left: 30px;
 
-    font-size: 28px;
-    font-weight: bold;
-    color: #000000; /* ton vert */
+  font-size: 28px;
+  font-weight: bold;
+  color: #000000;
 
-    margin: 0;
+  margin: 0;
 }
 
 
@@ -29,20 +29,20 @@
 /* Inputs personnalisés */
 .auth-input {
   background-color: #f9fafb;
-  border-radius: 10px;
+  border-radius: 15px;
   height: 44px;
   border: 2px solid #e5e7eb;
 }
 
 /* Bouton vert */
 .auth-button {
-  background-color: #43a047;
+  background-color: #198754;
   color: white;
-  border-radius: 10px;
+  border-radius: 15px;
   height: 44px;
   font-weight: 500;
 }
 
 .auth-button:hover {
-  background-color: #388e3c;
+  background-color: #198754;
 }

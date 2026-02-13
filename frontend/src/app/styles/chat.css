@@ -1,0 +1,86 @@
+/* Filtre pour rendre les icônes blanches */
+.filter-white {
+    filter: brightness(0) invert(1);
+}
+
+/* Style pour les icônes dans les boutons */
+.btn img {
+    transition: transform 0.2s ease;
+}
+
+/* Survol des boutons */
+.btn:hover img {
+    transform: scale(1.05);
+}
+
+/* Animation au survol des éléments de chat */
+.chat-item:hover {
+    background-color: #5a5a5a !important;
+}
+
+/* Scroll personnalisé pour la liste des chats */
+.sidebar > div:nth-child(3)::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar > div:nth-child(3)::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar > div:nth-child(3)::-webkit-scrollbar-thumb {
+    background: #5a5a5a;
+    border-radius: 3px;
+}
+
+.sidebar > div:nth-child(3)::-webkit-scrollbar-thumb:hover {
+    background: #6a6a6a;
+}
+
+/* Responsive pour la sidebar sur mobile */
+@media (max-width: 991px) {
+    .sidebar {
+        transform: translateX(-100%);
+        z-index: 1040;
+    }
+    
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    
+    .flex-grow-1 {
+        margin-left: 0 !important;
+    }
+}
+
+/* Scroll personnalisé global */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Effet smooth sur les boutons */
+.btn {
+    transition: all 0.3s ease;
+}
+
+.btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.btn:active {
+    transform: translateY(0);
+}

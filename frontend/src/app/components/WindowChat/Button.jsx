@@ -1,7 +1,11 @@
-export default function Button ({type='submit', label}) {
+export default function Button({ type = 'submit', label, className = '', icon }) {
     return (
-        <div>
-            <button type={type}>{label}</button>
-        </div>
+        <button 
+            type={type} 
+            className={`btn ${className}`}
+        >
+            {label}
+            {icon && <span className="ms-2">{icon}</span>}
+        </button>
     );
 }
