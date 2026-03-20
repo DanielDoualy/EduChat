@@ -1,0 +1,27 @@
+# Environnement
+.env
+venv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Base de données
+db.sqlite3
+*.sqlite3
+
+# Fichiers statiques
+staticfiles/
+media/
+
+# Tests et fichiers sensibles
+educhat/services/test_ai.py
+
+# VS Code
+.vscode/
+
+# Système
+.DS_Store
+Thumbs.db
