@@ -30,7 +30,11 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG") == "True"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "educhat-za3o.onrender.com",
+    "localhost",
+    "127.0.0.1"
+]
 
 
 # Application definition
@@ -52,19 +56,17 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',  # pour communication frontend
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-
+    'corsheaders.middleware.CorsMiddleware',  # doit rester en premier
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # apres SecurityMiddleware
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 # CORS configuration (communication avec React / Vite)
 CORS_ALLOWED_ORIGINS = [
