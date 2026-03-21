@@ -1,6 +1,5 @@
 # Fichiers sensibles
 docs/
-*.txt
 .env
 
 # Système
