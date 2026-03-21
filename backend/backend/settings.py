@@ -69,14 +69,23 @@ MIDDLEWARE = [
 
 
 # CORS configuration (communication avec React / Vite)
-CORS_ALLOWED_ORIGINS = [
-    "https://edu-chat-ivory.vercel.app",
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://localhost:5173",
-]
-
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "authorization",
+    "content-type",
+    "origin",
+    "x-requested-with",
+]
+CORS_ALLOW_METHODS = [
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+]
 
 
 ROOT_URLCONF = 'backend.urls'
