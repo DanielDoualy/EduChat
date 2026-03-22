@@ -8,15 +8,20 @@ import "../styles/auth.css"
 export default function Register() {
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
-    const [level, setLevel] = useState("")
+    const [level, setLevel] = useState("college")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [userName, setUserName] = useState("")
     const [error, setError] = useState("")
+    const [loading, setLoading] = useState(false)
 
     const navigate = useNavigate()
 
     const handleRegister = async () => {
+        if (loading) return
+        setLoading(true)
+        setError("")
+
         try {
             const response = await api.register({
                 first_name: firstName,
@@ -30,13 +35,16 @@ export default function Register() {
             const result = await response.json()
 
             if (!response.ok) {
-                setError(result.detail || "Erreur lors de l'inscription")
+                const firstError = Object.values(result)[0]
+                setError(Array.isArray(firstError) ? firstError[0] : firstError)
                 return
             }
 
             navigate("/login")
         } catch {
             setError("Impossible de se connecter au serveur")
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -67,14 +75,19 @@ export default function Register() {
                         onChange={(e) => setFirstName(e.target.value)}
                     />
 
-                    <InputField
-                        label="Niveau"
-                        placeholder="Entrer votre niveau academique"
-                        className="level"
-                        name="level"
-                        value={level}
-                        onChange={(e) => setLevel(e.target.value)}
-                    />
+                    {/* Menu deroulant pour le niveau */}
+                    <div className="form-group">
+                        <label><strong>Niveau</strong></label>
+                        <select
+                            className="level"
+                            value={level}
+                            onChange={(e) => setLevel(e.target.value)}
+                        >
+                            <option value="college">College</option>
+                            <option value="lycee">Lycee</option>
+                            <option value="universite">Universite</option>
+                        </select>
+                    </div>
 
                     <InputField
                         label="Email"
@@ -106,7 +119,7 @@ export default function Register() {
                     />
 
                     <Button
-                        text="Inscription"
+                        text={loading ? "Inscription..." : "Inscription"}
                         type="button"
                         className="send-button"
                         onClick={handleRegister}
