@@ -542,6 +542,20 @@ body {
     transition: color 0.2s ease;
 }
 
+
+.sidebar-logout-collapsed:hover { color: #e57373; }
+
+.sidebar-logout-btn {
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.3rem 0.5rem;
+    border-radius: 6px;
+    transition: color 0.2s ease;
+}
+
 .sidebar-logout-btn:hover { color: #e57373; }
 
 .sidebar-logout-collapsed {
