@@ -20,10 +20,23 @@ export default function ChatPage() {
     const level = localStorage.getItem("level") || "College"
     const token = localStorage.getItem("token")
 
+    // Gere les erreurs 401 — token expire
+    const handleApiError = (response) => {
+        if (response.status === 401) {
+            localStorage.removeItem("token")
+            localStorage.removeItem("username")
+            localStorage.removeItem("level")
+            navigate("/login")
+            return true
+        }
+        return false
+    }
+
     const createChat = async (selectedSubject) => {
         try {
             const response = await api.createChat(token, selectedSubject)
             const data = await response.json()
+            if (handleApiError(response)) return null
             if (!response.ok) { setError("Erreur création chat"); return null }
 
             const newChatId = data.chat_id
@@ -45,6 +58,7 @@ export default function ChatPage() {
         try {
             const response = await api.loadChats(token)
             const data = await response.json()
+            if (handleApiError(response)) return
             if (!response.ok) return
 
             const results = data.results || data
@@ -67,6 +81,7 @@ export default function ChatPage() {
         try {
             const response = await api.loadMessages(token, selectedChatId)
             const data = await response.json()
+            if (handleApiError(response)) return
             if (!response.ok) return
 
             const results = data.results || data
@@ -83,7 +98,7 @@ export default function ChatPage() {
     }
 
     useEffect(() => {
-        if (!token) { navigate("/login"); return }
+        if (!token) { navigate("/"); return }
 
         const init = async () => {
             await loadChats()
@@ -133,6 +148,7 @@ export default function ChatPage() {
         try {
             const response = await api.sendMessage(token, activeChatId, messageText)
             const data = await response.json()
+            if (handleApiError(response)) return
             if (!response.ok) { setError("Erreur IA"); return }
 
             setMessages(prev => [...prev, { sender: "bot", content: data.response }])
@@ -183,6 +199,7 @@ export default function ChatPage() {
     const deleteChat = async (deletedChatId) => {
         try {
             const response = await api.deleteChat(token, deletedChatId)
+            if (handleApiError(response)) return
             if (!response.ok) { setError("Erreur suppression"); return }
 
             setChats(prev => prev.filter(c => c.id !== deletedChatId))
