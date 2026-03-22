@@ -40,7 +40,21 @@ export default function Register() {
                 return
             }
 
-            navigate("/login")
+            // Connexion automatique apres inscription
+            const loginResponse = await api.login({ username: userName, password })
+            const loginResult = await loginResponse.json()
+
+            if (loginResponse.ok) {
+                localStorage.setItem("token", loginResult.access)
+                const profileResponse = await api.profile(loginResult.access)
+                const profileData = await profileResponse.json()
+                localStorage.setItem("username", profileData.username)
+                localStorage.setItem("level", profileData.level)
+                navigate("/chat") // redirection directe vers le chat
+            } else {
+                navigate("/login")
+            }
+
         } catch {
             setError("Impossible de se connecter au serveur")
         } finally {
