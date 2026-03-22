@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 import Button from "./Button"
 import InputField from "./InputField"
 import SubjectSelector from "./SubjectSelector"
@@ -19,6 +20,7 @@ export default function Sidebar({ onNewChat, onSelectSubject, chats = [], active
     const [searchQuery, setSearchQuery] = useState("")
     const menuRef = useRef(null)
     const searchRef = useRef(null)
+    const navigate = useNavigate()
 
     useEffect(() => {
         const handleClickOutside = (e) => {
@@ -29,6 +31,13 @@ export default function Sidebar({ onNewChat, onSelectSubject, chats = [], active
         document.addEventListener("mousedown", handleClickOutside)
         return () => document.removeEventListener("mousedown", handleClickOutside)
     }, [])
+
+    const handleLogout = () => {
+        localStorage.removeItem("token")
+        localStorage.removeItem("username")
+        localStorage.removeItem("level")
+        navigate("/")
+    }
 
     const handleEllipsisClick = (e, chatId) => {
         e.stopPropagation()
@@ -234,6 +243,12 @@ export default function Sidebar({ onNewChat, onSelectSubject, chats = [], active
                             <span className="sidebar-user-name">{username || "Username"}</span>
                             <span className="sidebar-user-level">{level || "College"}</span>
                         </div>
+                        <Button
+                            text="⏻"
+                            type="button"
+                            className="sidebar-logout-btn"
+                            onClick={handleLogout}
+                        />
                     </div>
                 </>
             ) : (
@@ -278,6 +293,15 @@ export default function Sidebar({ onNewChat, onSelectSubject, chats = [], active
                                 onClick={onToggle}
                             />
                             <span className="sidebar-tooltip">Profil</span>
+                        </div>
+                        <div className="sidebar-tooltip-wrapper">
+                            <Button
+                                text="⏻"
+                                type="button"
+                                className="sidebar-icon-collapsed sidebar-logout-collapsed"
+                                onClick={handleLogout}
+                            />
+                            <span className="sidebar-tooltip">Se déconnecter</span>
                         </div>
                     </div>
 
