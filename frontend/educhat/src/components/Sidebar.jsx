@@ -243,12 +243,15 @@ export default function Sidebar({ onNewChat, onSelectSubject, chats = [], active
                             <span className="sidebar-user-name">{username || "Username"}</span>
                             <span className="sidebar-user-level">{level || "College"}</span>
                         </div>
-                        <Button
-                            text="⏻"
-                            type="button"
-                            className="sidebar-logout-btn"
-                            onClick={handleLogout}
-                        />
+                        <div className="sidebar-logout-wrapper">
+                            <Button
+                                text="⏻"
+                                type="button"
+                                className="sidebar-logout-btn"
+                                onClick={handleLogout}
+                            />
+                            <span className="sidebar-logout-tooltip">Se déconnecter</span>
+                        </div>
                     </div>
                 </>
             ) : (

@@ -60,7 +60,7 @@ body {
 .sidebar-toggle-icon:hover { opacity: 1; }
 .sidebar-toggle-icon--collapsed { margin-bottom: 1rem; }
 
-/* TOOLTIP BOUTON TOGGLE MODE OUVERT */
+/* TOOLTIP TOGGLE OUVERT */
 .sidebar-toggle-wrapper {
     position: relative;
     display: flex;
@@ -94,9 +94,45 @@ body {
     border-right-color: #111;
 }
 
-.sidebar-toggle-wrapper:hover .sidebar-toggle-tooltip {
-    opacity: 1;
+.sidebar-toggle-wrapper:hover .sidebar-toggle-tooltip { opacity: 1; }
+
+/* TOOLTIP LOGOUT */
+.sidebar-logout-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-left: auto;
 }
+
+.sidebar-logout-tooltip {
+    position: fixed;
+    left: 290px;
+    bottom: 1.2rem;
+    background-color: #111;
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 0.4rem 0.75rem;
+    border-radius: 6px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 9999;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.sidebar-logout-tooltip::before {
+    content: "";
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 5px solid transparent;
+    border-right-color: #111;
+}
+
+.sidebar-logout-wrapper:hover .sidebar-logout-tooltip { opacity: 1; }
 
 /* TOOLTIPS MODE COLLAPSED */
 .sidebar-tooltip-wrapper {
@@ -132,9 +168,7 @@ body {
     border-right-color: #111;
 }
 
-.sidebar-tooltip-wrapper:hover .sidebar-tooltip {
-    opacity: 1;
-}
+.sidebar-tooltip-wrapper:hover .sidebar-tooltip { opacity: 1; }
 
 /* BOUTONS SIDEBAR */
 .sidebar-new-chat {
@@ -369,6 +403,32 @@ body {
 .sidebar-user-name { font-size: 0.95rem; font-weight: 600; color: white; }
 .sidebar-user-level { font-size: 0.8rem; color: #aaa; }
 
+/* LOGOUT BUTTON */
+.sidebar-logout-btn {
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.3rem 0.5rem;
+    border-radius: 6px;
+    transition: color 0.2s ease;
+}
+
+.sidebar-logout-btn:hover { color: #e57373; }
+
+.sidebar-logout-collapsed {
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.3rem;
+    transition: color 0.2s ease;
+}
+
+.sidebar-logout-collapsed:hover { color: #e57373; }
+
 /* MODE ICONES SEULEMENT */
 .sidebar-icons-only {
     display: flex;
@@ -380,7 +440,14 @@ body {
     overflow: visible;
 }
 
-.sidebar-icons-only-bottom { margin-top: auto; padding-bottom: 0.5rem; }
+.sidebar-icons-only-bottom {
+    margin-top: auto;
+    padding-bottom: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
 
 .sidebar-icon-collapsed {
     width: 24px;
@@ -529,43 +596,3 @@ body {
 .sidebar--open .sidebar-chats-label {
     animation: fadeIn 0.3s ease forwards;
 }
-
-.sidebar-logout-btn {
-    background: none;
-    border: none;
-    color: #aaa;
-    font-size: 1.2rem;
-    cursor: pointer;
-    padding: 0.3rem 0.5rem;
-    border-radius: 6px;
-    margin-left: auto;
-    transition: color 0.2s ease;
-}
-
-
-.sidebar-logout-collapsed:hover { color: #e57373; }
-
-.sidebar-logout-btn {
-    background: none;
-    border: none;
-    color: #aaa;
-    font-size: 1.2rem;
-    cursor: pointer;
-    padding: 0.3rem 0.5rem;
-    border-radius: 6px;
-    transition: color 0.2s ease;
-}
-
-.sidebar-logout-btn:hover { color: #e57373; }
-
-.sidebar-logout-collapsed {
-    background: none;
-    border: none;
-    color: #aaa;
-    font-size: 1.2rem;
-    cursor: pointer;
-    padding: 0.3rem;
-    transition: color 0.2s ease;
-}
-
-.sidebar-logout-collapsed:hover { color: #e57373; }
