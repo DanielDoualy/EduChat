@@ -37,10 +37,10 @@ export default function Register() {
             if (!response.ok) {
                 const firstError = Object.values(result)[0]
                 setError(Array.isArray(firstError) ? firstError[0] : firstError)
+                setLoading(false)
                 return
             }
 
-            // Connexion automatique apres inscription
             const loginResponse = await api.login({ username: userName, password })
             const loginResult = await loginResponse.json()
 
@@ -50,26 +50,33 @@ export default function Register() {
                 const profileData = await profileResponse.json()
                 localStorage.setItem("username", profileData.username)
                 localStorage.setItem("level", profileData.level)
-                navigate("/chat") // redirection directe vers le chat
+                navigate("/chat")
             } else {
                 navigate("/login")
             }
 
         } catch {
             setError("Impossible de se connecter au serveur")
-        } finally {
             setLoading(false)
         }
     }
 
     return (
         <div className="register-page">
+
+            {loading && (
+                <div className="page-loading-overlay">
+                    <div className="page-loading-spinner" />
+                    <p className="page-loading-text">Création du compte...</p>
+                </div>
+            )}
+
             <h1 className="logo">EduChat</h1>
             <div className="register-wrapper">
                 <div className="register-div">
                     <h2>S'inscrire</h2>
 
-                    {error && <p style={{ color: "red", fontSize: "0.85rem" }}>{error}</p>}
+                    {error && <p className="error-message">{error}</p>}
 
                     <InputField
                         label="Nom"
@@ -89,7 +96,6 @@ export default function Register() {
                         onChange={(e) => setFirstName(e.target.value)}
                     />
 
-                    {/* Menu deroulant pour le niveau */}
                     <div className="form-group">
                         <label><strong>Niveau</strong></label>
                         <select
@@ -133,7 +139,14 @@ export default function Register() {
                     />
 
                     <Button
-                        text={loading ? "Inscription..." : "Inscription"}
+                        text={
+                            loading ? (
+                                <span>
+                                    <span className="btn-spinner" />
+                                    Inscription...
+                                </span>
+                            ) : "Inscription"
+                        }
                         type="button"
                         className="send-button"
                         onClick={handleRegister}

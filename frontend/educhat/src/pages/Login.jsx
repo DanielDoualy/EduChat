@@ -9,16 +9,22 @@ export default function Login() {
     const [password, setPassword] = useState("")
     const [userName, setUserName] = useState("")
     const [error, setError] = useState("")
+    const [loading, setLoading] = useState(false)
 
     const navigate = useNavigate()
 
     const handleLogin = async () => {
+        if (loading) return
+        setLoading(true)
+        setError("")
+
         try {
             const response = await api.login({ username: userName, password })
             const result = await response.json()
 
             if (!response.ok) {
                 setError("Nom d'utilisateur ou mot de passe incorrect")
+                setLoading(false)
                 return
             }
 
@@ -33,17 +39,30 @@ export default function Login() {
             navigate("/chat")
         } catch {
             setError("Impossible de se connecter au serveur")
+            setLoading(false)
         }
+    }
+
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") handleLogin()
     }
 
     return (
         <div className="register-page">
+
+            {loading && (
+                <div className="page-loading-overlay">
+                    <div className="page-loading-spinner" />
+                    <p className="page-loading-text">Connexion en cours...</p>
+                </div>
+            )}
+
             <h1 className="logo">EduChat</h1>
             <div className="register-wrapper">
                 <div className="register-div">
                     <h2>Se connecter</h2>
 
-                    {error && <p style={{ color: "red", fontSize: "0.85rem" }}>{error}</p>}
+                    {error && <p className="error-message">{error}</p>}
 
                     <InputField
                         label="Nom d'utilisateur"
@@ -52,6 +71,7 @@ export default function Login() {
                         name="username"
                         value={userName}
                         onChange={(e) => setUserName(e.target.value)}
+                        onKeyDown={handleKeyDown}
                     />
 
                     <InputField
@@ -62,10 +82,18 @@ export default function Login() {
                         name="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                        onKeyDown={handleKeyDown}
                     />
 
                     <Button
-                        text="Connexion"
+                        text={
+                            loading ? (
+                                <span>
+                                    <span className="btn-spinner" />
+                                    Connexion...
+                                </span>
+                            ) : "Connexion"
+                        }
                         type="button"
                         className="send-button"
                         onClick={handleLogin}
