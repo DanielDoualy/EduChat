@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react"
 import Message from "./Message"
 import MessageInput from "./MessageInput"
 
-export default function ChatWindow({ messages, loading, input, onInputChange, onSend, username }) {
+export default function ChatWindow({ messages, loading, input, onInputChange, onSend, username, serverLoading }) {
 
     const bottomRef = useRef(null)
 
@@ -16,6 +16,12 @@ export default function ChatWindow({ messages, loading, input, onInputChange, on
             <div className="chat-header">
                 <h2>EduChat</h2>
             </div>
+
+            {serverLoading && (
+                <div className="server-loading-banner">
+                    Le serveur démarre, veuillez patienter environ 50 secondes...
+                </div>
+            )}
 
             <div className="chat-messages">
 

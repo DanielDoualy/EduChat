@@ -596,3 +596,13 @@ body {
 .sidebar--open .sidebar-chats-label {
     animation: fadeIn 0.3s ease forwards;
 }
+
+.server-loading-banner {
+    background-color: #fff3cd;
+    color: #856404;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+    text-align: center;
+    border-bottom: 1px solid #ffc107;
+    animation: fadeIn 0.3s ease forwards;
+}

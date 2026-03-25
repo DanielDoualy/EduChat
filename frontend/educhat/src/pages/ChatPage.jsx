@@ -14,13 +14,13 @@ export default function ChatPage() {
     const [chats, setChats] = useState([])
     const [subject, setSubject] = useState("maths")
     const [sidebarOpen, setSidebarOpen] = useState(true)
+    const [serverLoading, setServerLoading] = useState(false)
 
     const navigate = useNavigate()
     const username = localStorage.getItem("username") || "Username"
     const level = localStorage.getItem("level") || "College"
     const token = localStorage.getItem("token")
 
-    // Gere les erreurs 401 — token expire
     const handleApiError = (response) => {
         if (response.status === 401) {
             localStorage.removeItem("token")
@@ -30,6 +30,11 @@ export default function ChatPage() {
             return true
         }
         return false
+    }
+
+    const handleFetchError = () => {
+        setServerLoading(true)
+        setTimeout(() => setServerLoading(false), 60000)
     }
 
     const createChat = async (selectedSubject) => {
@@ -49,7 +54,7 @@ export default function ChatPage() {
             })
             return newChatId
         } catch {
-            setError("Impossible de se connecter au serveur")
+            handleFetchError()
             return null
         }
     }
@@ -71,7 +76,7 @@ export default function ChatPage() {
                 }))
             setChats(formatted)
         } catch {
-            setError("Impossible de charger les chats")
+            handleFetchError()
         }
     }
 
@@ -91,7 +96,7 @@ export default function ChatPage() {
             }))
             setMessages(formatted)
         } catch {
-            setError("Impossible de charger les messages")
+            handleFetchError()
         } finally {
             setLoading(false)
         }
@@ -151,6 +156,7 @@ export default function ChatPage() {
             if (handleApiError(response)) return
             if (!response.ok) { setError("Erreur IA"); return }
 
+            setServerLoading(false)
             setMessages(prev => [...prev, { sender: "bot", content: data.response }])
 
             if (data.title) {
@@ -184,7 +190,7 @@ export default function ChatPage() {
             }
 
         } catch {
-            setError("Impossible de joindre le serveur")
+            handleFetchError()
         } finally {
             setLoading(false)
         }
@@ -208,7 +214,7 @@ export default function ChatPage() {
                 setMessages([])
             }
         } catch {
-            setError("Impossible de supprimer le chat")
+            handleFetchError()
         }
     }
 
@@ -235,6 +241,7 @@ export default function ChatPage() {
                 onInputChange={setInput}
                 onSend={sendMessage}
                 username={username}
+                serverLoading={serverLoading}
             />
         </div>
     )
