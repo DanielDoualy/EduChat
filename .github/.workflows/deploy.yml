@@ -1,0 +1,53 @@
+name: Deploy EduChat
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+
+  test-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          cd backend
+          pip install -r requirements.txt
+
+      - name: Check Django
+        run: |
+          cd backend
+          python manage.py check
+        env:
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          DEBUG: "True"
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+  test-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: |
+          cd frontend/educhat
+          npm install
+
+      - name: Build
+        run: |
+          cd frontend/educhat
+          npm run build
+        env:
+          VITE_API_URL: https://educhat-gjgf.onrender.com
