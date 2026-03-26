@@ -107,6 +107,12 @@ Le backend est déployé sur **Render** avec une base de données PostgreSQL. Le
 
 ---
 
+## Lien du site
+
+ https://edu-chat-ivory.vercel.app
+
+ ---
+
 ## Installation locale
 
 **Backend**
