@@ -41,7 +41,7 @@ def generate_ai_response(messages, subject=None, level=None):
             {"role": "system", "content": full_system_prompt},
             *messages
         ],
-        model="llama-3.1-8b-instant"
+        model="openai/gpt-oss-20b"
     )
 
     response = chat_completion.choices[0].message.content
