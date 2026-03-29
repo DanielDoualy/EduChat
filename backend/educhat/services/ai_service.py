@@ -97,7 +97,12 @@ def detect_subject(message):
         if score > 0:
             scores[subject] = score
     if scores:
-        return max(scores, key=scores.get)
+        best_subject = max(scores, key=scores.get)
+        best_score = scores[best_subject]
+        # Minimum 2 mots-cles pour eviter les faux positifs
+        # sur des questions de suivi courtes
+        if best_score >= 2:
+            return best_subject
     return None
 
 
