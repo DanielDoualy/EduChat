@@ -517,6 +517,8 @@ body {
     background-color: white;
     color: #111;
     border-bottom-left-radius: 4px;
+    line-height: 1.7;
+    word-break: break-word;
 }
 
 .message-avatar-icon { width: 28px; height: 28px; }
