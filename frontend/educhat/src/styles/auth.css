@@ -40,6 +40,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 0.6rem;
+    animation: pageSlideIn 0.4s ease forwards;
 }
 
 .register-div h2 {
@@ -48,7 +49,6 @@ body {
     margin-bottom: 0.3rem;
 }
 
-/* form-group vient de InputField corrigé — plus de div imbriqués */
 .register-div .form-group {
     display: flex;
     flex-direction: column;
@@ -75,7 +75,7 @@ body {
     outline: none;
     width: 100%;
     height: 44px;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
 }
 
 .last-name::placeholder,
@@ -94,9 +94,11 @@ body {
 .password:focus,
 .username:focus {
     border-color: #4caf50;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.15);
+    transform: scale(1.01);
 }
 
-/* Bouton — Button sans div wrapper */
+/* Bouton */
 .send-button {
     background-color: #4caf50;
     border: none;
@@ -115,25 +117,9 @@ body {
 
 .send-button:hover { background-color: #43a047; }
 
-@media (max-width: 600px) {
-    .register-page { padding: 1rem; }
-    .register-div { padding: 1.5rem 1.2rem; }
-    .send-button { width: 100%; }
-}
-
-/* Animation entrée page */
-@keyframes pageSlideIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-/* Carte formulaire animée */
-.register-div {
-    animation: pageSlideIn 0.4s ease forwards;
+.send-button:disabled {
+    opacity: 0.8;
+    cursor: not-allowed;
 }
 
 /* Spinner bouton */
@@ -149,26 +135,7 @@ body {
     vertical-align: middle;
 }
 
-/* Bouton disabled pendant chargement */
-.send-button:disabled {
-    opacity: 0.8;
-    cursor: not-allowed;
-}
-
-/* Input focus animation */
-.last-name, .first-name, .level,
-.email, .password, .username {
-    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
-}
-
-.last-name:focus, .first-name:focus, .level:focus,
-.email:focus, .password:focus, .username:focus {
-    border-color: #4caf50;
-    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.15);
-    transform: scale(1.01);
-}
-
-/* Message erreur animé */
+/* Messages */
 .error-message {
     color: #e53935;
     font-size: 0.85rem;
@@ -179,7 +146,6 @@ body {
     animation: pageSlideIn 0.3s ease forwards;
 }
 
-/* Message succès animé */
 .success-message {
     color: #2e7d32;
     font-size: 0.85rem;
@@ -190,7 +156,7 @@ body {
     animation: pageSlideIn 0.3s ease forwards;
 }
 
-/* Overlay de chargement page entière */
+/* Overlay chargement */
 .page-loading-overlay {
     position: fixed;
     inset: 0;
@@ -219,7 +185,56 @@ body {
     font-weight: 500;
 }
 
+/* Animations */
+@keyframes pageSlideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
 @keyframes fadeIn {
     from { opacity: 0; }
     to   { opacity: 1; }
+}
+
+/* ========================================
+   RESPONSIVE MOBILE
+   ======================================== */
+@media (max-width: 768px) {
+    .register-page { padding: 1.2rem 1rem; }
+
+    .register-div {
+        padding: 1.5rem 1.2rem;
+        border-radius: 12px;
+        gap: 0.5rem;
+    }
+
+    .register-div h2 { font-size: 1.2rem; }
+
+    .send-button {
+        width: 100%;
+        height: 48px;
+        font-size: 1rem;
+    }
+
+    .last-name, .first-name, .level,
+    .email, .password, .username {
+        font-size: 1rem;
+        height: 48px;
+    }
+
+    /* Désactiver l'animation scale sur mobile car elle cause des soucis */
+    .last-name:focus, .first-name:focus, .level:focus,
+    .email:focus, .password:focus, .username:focus {
+        transform: none;
+    }
+}
+
+@media (max-width: 400px) {
+    .register-page { padding: 1rem 0.75rem; }
+    .register-div { padding: 1.2rem 1rem; }
+    .logo { font-size: 24px; }
 }

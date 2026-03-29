@@ -15,13 +15,19 @@ export default function ChatPage() {
     const [subject, setSubject] = useState(
         localStorage.getItem("current_subject") || "maths"
     )
-    const [sidebarOpen, setSidebarOpen] = useState(true)
+    const [sidebarOpen, setSidebarOpen] = useState(false)
     const [serverLoading, setServerLoading] = useState(false)
 
     const navigate = useNavigate()
     const username = localStorage.getItem("username") || "Username"
     const level = localStorage.getItem("level") || "College"
     const token = localStorage.getItem("token")
+
+    // Detecte si on est sur mobile au chargement
+    useEffect(() => {
+        const isMobile = window.innerWidth <= 768
+        setSidebarOpen(!isMobile)
+    }, [])
 
     const handleApiError = (response) => {
         if (response.status === 401) {
@@ -125,15 +131,17 @@ export default function ChatPage() {
     const handleSelectSubject = async (selectedSubject) => {
         updateSubject(selectedSubject)
         await createChat(selectedSubject)
+        // Ferme la sidebar sur mobile apres selection
+        if (window.innerWidth <= 768) setSidebarOpen(false)
     }
 
     const handleSelectChat = async (selectedChatId) => {
         setChatId(selectedChatId)
         await loadMessages(selectedChatId)
         const selectedChat = chats.find(c => c.id === selectedChatId)
-        if (selectedChat) {
-            updateSubject(selectedChat.subject)
-        }
+        if (selectedChat) updateSubject(selectedChat.subject)
+        // Ferme la sidebar sur mobile apres selection d'un chat
+        if (window.innerWidth <= 768) setSidebarOpen(false)
     }
 
     const sendMessage = async () => {
@@ -181,10 +189,8 @@ export default function ChatPage() {
             if (data.chat_id && data.chat_id !== activeChatId) {
                 const newChatId = data.chat_id
                 const newSubject = data.subject
-
                 setChatId(newChatId)
                 updateSubject(newSubject)
-
                 setChats(prev => {
                     const exists = prev.find(c => c.id === newChatId)
                     if (exists) return prev.map(c =>
@@ -229,22 +235,38 @@ export default function ChatPage() {
         }
     }
 
+    const handleToggleSidebar = () => setSidebarOpen(prev => !prev)
+    const handleCloseSidebar = () => setSidebarOpen(false)
+
     return (
         <div className="chat-page">
+
+            {/* Overlay mobile — ferme la sidebar en cliquant dehors */}
+            {sidebarOpen && (
+                <div
+                    className="sidebar-overlay"
+                    onClick={handleCloseSidebar}
+                />
+            )}
+
             <Sidebar
                 chats={chats}
                 activeChatId={chatId}
-                onNewChat={() => createChat(subject)}
+                onNewChat={() => {
+                    createChat(subject)
+                    if (window.innerWidth <= 768) setSidebarOpen(false)
+                }}
                 onSelectSubject={handleSelectSubject}
                 onSelectChat={handleSelectChat}
                 username={username}
                 level={level}
                 isOpen={sidebarOpen}
-                onToggle={() => setSidebarOpen(prev => !prev)}
+                onToggle={handleToggleSidebar}
                 onRenameChat={renameChat}
                 onDeleteChat={deleteChat}
                 currentSubject={subject}
             />
+
             <ChatWindow
                 messages={messages}
                 loading={loading}
@@ -253,6 +275,7 @@ export default function ChatPage() {
                 onSend={sendMessage}
                 username={username}
                 serverLoading={serverLoading}
+                onMenuOpen={handleToggleSidebar}
             />
         </div>
     )

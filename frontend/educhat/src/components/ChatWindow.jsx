@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react"
 import Message from "./Message"
 import MessageInput from "./MessageInput"
 
-export default function ChatWindow({ messages, loading, input, onInputChange, onSend, username, serverLoading }) {
+export default function ChatWindow({ messages, loading, input, onInputChange, onSend, username, serverLoading, onMenuOpen }) {
 
     const bottomRef = useRef(null)
 
@@ -14,6 +14,10 @@ export default function ChatWindow({ messages, loading, input, onInputChange, on
         <div className="chat-window">
 
             <div className="chat-header">
+                {/* Bouton hamburger visible uniquement sur mobile */}
+                <button className="mobile-menu-btn" onClick={onMenuOpen}>
+                    ☰
+                </button>
                 <h2>EduChat</h2>
             </div>
 
@@ -24,7 +28,6 @@ export default function ChatWindow({ messages, loading, input, onInputChange, on
             )}
 
             <div className="chat-messages">
-
                 <Message
                     sender="bot"
                     content={`Bonjour ${username || ""}, je suis votre assistant IA EduChat. En quoi puis-je vous aider ?`}

@@ -10,6 +10,7 @@ body {
     display: flex;
     height: 100vh;
     background-color: #e0e0e0;
+    position: relative;
 }
 
 /* SIDEBAR */
@@ -22,7 +23,8 @@ body {
     padding: 1rem;
     gap: 0.3rem;
     color: white;
-    transition: width 0.3s ease, padding 0.3s ease, min-width 0.3s ease;
+    transition: width 0.3s ease, padding 0.3s ease, min-width 0.3s ease, transform 0.3s ease;
+    z-index: 100;
 }
 
 .sidebar--open {
@@ -459,6 +461,15 @@ body {
 
 .sidebar-icon-collapsed:hover { opacity: 1; }
 
+/* OVERLAY MOBILE — ferme la sidebar en cliquant dehors */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 99;
+}
+
 /* CHAT WINDOW */
 .chat-window {
     flex: 1;
@@ -466,15 +477,32 @@ body {
     flex-direction: column;
     height: 100vh;
     background-color: #e8e8e8;
+    min-width: 0;
 }
 
 .chat-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
     padding: 1rem 1.5rem;
     background-color: #e8e8e8;
     border-bottom: 1px solid #d0d0d0;
 }
 
 .chat-header h2 { font-size: 1.2rem; font-weight: 600; }
+
+/* Bouton menu mobile dans le header */
+.mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.3rem;
+    border-radius: 6px;
+    color: #333;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
 
 .chat-messages {
     flex: 1;
@@ -497,7 +525,7 @@ body {
 .message-wrapper--bot { justify-content: flex-start; }
 
 .message-bubble {
-    max-width: 55%;
+    max-width: 75%;
     padding: 0.75rem 1rem;
     border-radius: 18px;
     font-size: 0.95rem;
@@ -521,7 +549,7 @@ body {
     word-break: break-word;
 }
 
-.message-avatar-icon { width: 28px; height: 28px; }
+.message-avatar-icon { width: 28px; height: 28px; flex-shrink: 0; }
 
 /* MESSAGE INPUT */
 .message-input-wrapper {
@@ -567,6 +595,7 @@ body {
     cursor: pointer;
     white-space: nowrap;
     transition: background-color 0.2s ease, transform 0.1s ease;
+    flex-shrink: 0;
 }
 
 .message-send-btn:hover { background-color: #43a047; }
@@ -607,4 +636,78 @@ body {
     text-align: center;
     border-bottom: 1px solid #ffc107;
     animation: fadeIn 0.3s ease forwards;
+}
+
+/* ========================================
+   RESPONSIVE MOBILE
+   ======================================== */
+@media (max-width: 768px) {
+
+    body { overflow: hidden; }
+
+    .chat-page { position: relative; }
+
+    /* Sidebar cachée par défaut sur mobile */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        transform: translateX(-100%);
+        width: 280px !important;
+        min-width: 280px !important;
+        z-index: 200;
+        transition: transform 0.3s ease;
+    }
+
+    /* Sidebar ouverte sur mobile */
+    .sidebar--open {
+        transform: translateX(0);
+    }
+
+    /* Sidebar fermée sur mobile — cachée complètement */
+    .sidebar--closed {
+        transform: translateX(-100%);
+        width: 280px !important;
+        min-width: 280px !important;
+    }
+
+    /* Overlay visible quand sidebar ouverte */
+    .sidebar-overlay {
+        display: block;
+    }
+
+    /* Tooltips désactivés sur mobile */
+    .sidebar-toggle-tooltip,
+    .sidebar-logout-tooltip,
+    .sidebar-tooltip { display: none !important; }
+
+    /* Bouton menu hamburger visible sur mobile */
+    .mobile-menu-btn { display: flex; }
+
+    /* Chat window prend tout l'écran */
+    .chat-window { width: 100%; }
+
+    .chat-header { padding: 0.75rem 1rem; }
+
+    .chat-messages { padding: 1rem; }
+
+    /* Messages plus larges sur mobile */
+    .message-bubble { max-width: 85%; }
+
+    .message-input-wrapper { padding: 0.75rem 1rem; gap: 0.5rem; }
+
+    /* Bouton envoyer réduit sur mobile */
+    .message-send-btn {
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+    }
+
+    /* Texte du bouton envoyer caché sur très petit écran */
+    .send-btn-text { display: none; }
+}
+
+@media (max-width: 400px) {
+    .message-bubble { max-width: 90%; font-size: 0.9rem; }
+    .message-input { font-size: 0.9rem; padding: 0.65rem 1rem; }
 }
