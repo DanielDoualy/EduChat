@@ -34,6 +34,7 @@ export default function Sidebar({ onNewChat, onSelectSubject, chats = [], active
 
     const handleLogout = () => {
         localStorage.removeItem("token")
+        localStorage.removeItem("refresh_token")
         localStorage.removeItem("username")
         localStorage.removeItem("level")
         navigate("/")

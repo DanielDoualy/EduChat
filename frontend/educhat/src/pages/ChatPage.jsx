@@ -12,7 +12,9 @@ export default function ChatPage() {
     const [loading, setLoading] = useState(false)
     const [, setError] = useState("")
     const [chats, setChats] = useState([])
-    const [subject, setSubject] = useState("maths")
+    const [subject, setSubject] = useState(
+        localStorage.getItem("current_subject") || "maths"
+    )
     const [sidebarOpen, setSidebarOpen] = useState(true)
     const [serverLoading, setServerLoading] = useState(false)
 
@@ -24,8 +26,10 @@ export default function ChatPage() {
     const handleApiError = (response) => {
         if (response.status === 401) {
             localStorage.removeItem("token")
+            localStorage.removeItem("refresh_token")
             localStorage.removeItem("username")
             localStorage.removeItem("level")
+            localStorage.removeItem("current_subject")
             navigate("/login")
             return true
         }
@@ -37,9 +41,14 @@ export default function ChatPage() {
         setTimeout(() => setServerLoading(false), 60000)
     }
 
+    const updateSubject = (newSubject) => {
+        setSubject(newSubject)
+        localStorage.setItem("current_subject", newSubject)
+    }
+
     const createChat = async (selectedSubject) => {
         try {
-            const response = await api.createChat(token, selectedSubject)
+            const response = await api.createChat(selectedSubject)
             const data = await response.json()
             if (handleApiError(response)) return null
             if (!response.ok) { setError("Erreur création chat"); return null }
@@ -61,7 +70,7 @@ export default function ChatPage() {
 
     const loadChats = async () => {
         try {
-            const response = await api.loadChats(token)
+            const response = await api.loadChats()
             const data = await response.json()
             if (handleApiError(response)) return
             if (!response.ok) return
@@ -84,7 +93,7 @@ export default function ChatPage() {
         setMessages([])
         setLoading(true)
         try {
-            const response = await api.loadMessages(token, selectedChatId)
+            const response = await api.loadMessages(selectedChatId)
             const data = await response.json()
             if (handleApiError(response)) return
             if (!response.ok) return
@@ -107,14 +116,14 @@ export default function ChatPage() {
 
         const init = async () => {
             await loadChats()
-            await createChat("maths")
+            await createChat(subject)
         }
 
         init()
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     const handleSelectSubject = async (selectedSubject) => {
-        setSubject(selectedSubject)
+        updateSubject(selectedSubject)
         await createChat(selectedSubject)
     }
 
@@ -122,7 +131,9 @@ export default function ChatPage() {
         setChatId(selectedChatId)
         await loadMessages(selectedChatId)
         const selectedChat = chats.find(c => c.id === selectedChatId)
-        if (selectedChat) setSubject(selectedChat.subject)
+        if (selectedChat) {
+            updateSubject(selectedChat.subject)
+        }
     }
 
     const sendMessage = async () => {
@@ -151,7 +162,7 @@ export default function ChatPage() {
         }
 
         try {
-            const response = await api.sendMessage(token, activeChatId, messageText)
+            const response = await api.sendMessage(activeChatId, messageText)
             const data = await response.json()
             if (handleApiError(response)) return
             if (!response.ok) { setError("Erreur IA"); return }
@@ -172,7 +183,7 @@ export default function ChatPage() {
                 const newSubject = data.subject
 
                 setChatId(newChatId)
-                setSubject(newSubject)
+                updateSubject(newSubject)
 
                 setChats(prev => {
                     const exists = prev.find(c => c.id === newChatId)
@@ -186,7 +197,7 @@ export default function ChatPage() {
                     }]
                 })
             } else if (data.subject && data.subject !== subject) {
-                setSubject(data.subject)
+                updateSubject(data.subject)
             }
 
         } catch {
@@ -196,15 +207,15 @@ export default function ChatPage() {
         }
     }
 
-    const renameChat = (chatId, newTitle) => {
+    const renameChat = (id, newTitle) => {
         setChats(prev => prev.map(c =>
-            c.id === chatId ? { ...c, title: newTitle } : c
+            c.id === id ? { ...c, title: newTitle } : c
         ))
     }
 
     const deleteChat = async (deletedChatId) => {
         try {
-            const response = await api.deleteChat(token, deletedChatId)
+            const response = await api.deleteChat(deletedChatId)
             if (handleApiError(response)) return
             if (!response.ok) { setError("Erreur suppression"); return }
 

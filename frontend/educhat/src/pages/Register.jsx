@@ -45,7 +45,10 @@ export default function Register() {
             const loginResult = await loginResponse.json()
 
             if (loginResponse.ok) {
+                // Sauvegarder les deux tokens
                 localStorage.setItem("token", loginResult.access)
+                localStorage.setItem("refresh_token", loginResult.refresh)
+
                 const profileResponse = await api.profile(loginResult.access)
                 const profileData = await profileResponse.json()
                 localStorage.setItem("username", profileData.username)

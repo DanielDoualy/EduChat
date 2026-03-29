@@ -1,9 +1,64 @@
 const API_URL = import.meta.env.VITE_API_URL
 console.log("API_URL:", API_URL)
 
+const refreshAccessToken = async () => {
+    const refreshToken = localStorage.getItem("refresh_token")
+    if (!refreshToken) return null
+
+    try {
+        const response = await fetch(`${API_URL}/api/token/refresh/`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ refresh: refreshToken })
+        })
+
+        if (!response.ok) {
+            localStorage.removeItem("token")
+            localStorage.removeItem("refresh_token")
+            localStorage.removeItem("username")
+            localStorage.removeItem("level")
+            localStorage.removeItem("current_subject")
+            window.location.href = "/login"
+            return null
+        }
+
+        const data = await response.json()
+        localStorage.setItem("token", data.access)
+        return data.access
+    } catch {
+        return null
+    }
+}
+
+const fetchWithAuth = async (url, options = {}) => {
+    const token = localStorage.getItem("token")
+
+    const response = await fetch(url, {
+        ...options,
+        headers: {
+            ...options.headers,
+            "Authorization": `Bearer ${token}`
+        }
+    })
+
+    if (response.status === 401) {
+        const newToken = await refreshAccessToken()
+        if (!newToken) return response
+
+        return fetch(url, {
+            ...options,
+            headers: {
+                ...options.headers,
+                "Authorization": `Bearer ${newToken}`
+            }
+        })
+    }
+
+    return response
+}
+
 export const api = {
 
-    // Auth
     login: (data) => fetch(`${API_URL}/api/token/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -20,36 +75,23 @@ export const api = {
         body: JSON.stringify(data)
     }),
 
-    // Chats
-    loadChats: (token) => fetch(`${API_URL}/api/chats/`, {
-        headers: { "Authorization": `Bearer ${token}` }
-    }),
+    loadChats: () => fetchWithAuth(`${API_URL}/api/chats/`),
 
-    createChat: (token, subject) => fetch(`${API_URL}/api/chats/create/`, {
+    createChat: (subject) => fetchWithAuth(`${API_URL}/api/chats/create/`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ subject })
     }),
 
-    deleteChat: (token, chatId) => fetch(`${API_URL}/api/chats/${chatId}/`, {
+    deleteChat: (chatId) => fetchWithAuth(`${API_URL}/api/chats/${chatId}/`, {
         method: "DELETE",
-        headers: { "Authorization": `Bearer ${token}` }
     }),
 
-    // Messages
-    loadMessages: (token, chatId) => fetch(`${API_URL}/api/messages/?chat=${chatId}`, {
-        headers: { "Authorization": `Bearer ${token}` }
-    }),
+    loadMessages: (chatId) => fetchWithAuth(`${API_URL}/api/messages/?chat=${chatId}`),
 
-    sendMessage: (token, chatId, message) => fetch(`${API_URL}/api/ai/chat/`, {
+    sendMessage: (chatId, message) => fetchWithAuth(`${API_URL}/api/ai/chat/`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ chat_id: chatId, message })
     })
 }
