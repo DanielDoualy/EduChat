@@ -3,14 +3,16 @@
 body {
     font-family: system-ui, sans-serif;
     height: 100vh;
-    overflow: hidden;
+    height: 100dvh;
 }
 
 .chat-page {
     display: flex;
     height: 100vh;
+    height: 100dvh;
     background-color: #e0e0e0;
     position: relative;
+    overflow: hidden;
 }
 
 /* SIDEBAR */
@@ -32,6 +34,7 @@ body {
     min-width: 320px;
     overflow-y: auto;
     overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
 }
 
 .sidebar--closed {
@@ -461,13 +464,14 @@ body {
 
 .sidebar-icon-collapsed:hover { opacity: 1; }
 
-/* OVERLAY MOBILE — ferme la sidebar en cliquant dehors */
+/* OVERLAY MOBILE */
 .sidebar-overlay {
     display: none;
     position: fixed;
     inset: 0;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 99;
+    z-index: 150;
+    -webkit-tap-highlight-color: transparent;
 }
 
 /* CHAT WINDOW */
@@ -476,8 +480,10 @@ body {
     display: flex;
     flex-direction: column;
     height: 100vh;
+    height: 100dvh;
     background-color: #e8e8e8;
     min-width: 0;
+    overflow: hidden;
 }
 
 .chat-header {
@@ -487,11 +493,11 @@ body {
     padding: 1rem 1.5rem;
     background-color: #e8e8e8;
     border-bottom: 1px solid #d0d0d0;
+    flex-shrink: 0;
 }
 
 .chat-header h2 { font-size: 1.2rem; font-weight: 600; }
 
-/* Bouton menu mobile dans le header */
 .mobile-menu-btn {
     display: none;
     background: none;
@@ -502,6 +508,7 @@ body {
     color: #333;
     font-size: 1.3rem;
     flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .chat-messages {
@@ -511,6 +518,9 @@ body {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    /* Scroll natif iOS */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
 }
 
 /* MESSAGES */
@@ -559,6 +569,10 @@ body {
     padding: 1rem 1.5rem;
     background-color: #e8e8e8;
     border-top: 1px solid #d0d0d0;
+    flex-shrink: 0;
+    /* Reste visible au dessus du clavier iOS */
+    position: relative;
+    z-index: 1;
 }
 
 .message-input-wrapper .form-group {
@@ -575,6 +589,8 @@ body {
     outline: none;
     background-color: white;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    /* Evite le zoom auto iOS sur focus */
+    font-size: max(16px, 0.95rem);
 }
 
 .message-input:focus {
@@ -596,6 +612,7 @@ body {
     white-space: nowrap;
     transition: background-color 0.2s ease, transform 0.1s ease;
     flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .message-send-btn:hover { background-color: #43a047; }
@@ -636,6 +653,7 @@ body {
     text-align: center;
     border-bottom: 1px solid #ffc107;
     animation: fadeIn 0.3s ease forwards;
+    flex-shrink: 0;
 }
 
 /* ========================================
@@ -643,9 +661,25 @@ body {
    ======================================== */
 @media (max-width: 768px) {
 
-    body { overflow: hidden; }
+    body {
+        /* Ne pas bloquer le scroll sur body — cause des problèmes iOS */
+        overflow: hidden;
+        /* Evite le rebond élastique iOS sur body */
+        overscroll-behavior: none;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+    }
 
-    .chat-page { position: relative; }
+    .chat-page {
+        height: 100vh;
+        height: 100dvh;
+        overflow: hidden;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        left: 0;
+    }
 
     /* Sidebar cachée par défaut sur mobile */
     .sidebar {
@@ -653,23 +687,25 @@ body {
         top: 0;
         left: 0;
         height: 100vh;
+        height: 100dvh;
         transform: translateX(-100%);
-        width: 280px !important;
-        min-width: 280px !important;
+        width: 85vw !important;
+        max-width: 300px !important;
+        min-width: unset !important;
         z-index: 200;
         transition: transform 0.3s ease;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
-    /* Sidebar ouverte sur mobile */
     .sidebar--open {
         transform: translateX(0);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
-    /* Sidebar fermée sur mobile — cachée complètement */
     .sidebar--closed {
         transform: translateX(-100%);
-        width: 280px !important;
-        min-width: 280px !important;
     }
 
     /* Overlay visible quand sidebar ouverte */
@@ -677,37 +713,53 @@ body {
         display: block;
     }
 
-    /* Tooltips désactivés sur mobile */
+    /* Cacher les tooltips sur mobile */
     .sidebar-toggle-tooltip,
     .sidebar-logout-tooltip,
     .sidebar-tooltip { display: none !important; }
 
-    /* Bouton menu hamburger visible sur mobile */
+    /* Bouton hamburger visible sur mobile */
     .mobile-menu-btn { display: flex; }
 
-    /* Chat window prend tout l'écran */
-    .chat-window { width: 100%; }
+    /* Chat window plein écran */
+    .chat-window {
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        overflow: hidden;
+    }
 
     .chat-header { padding: 0.75rem 1rem; }
 
-    .chat-messages { padding: 1rem; }
+    /* Zone messages scrollable sur iOS */
+    .chat-messages {
+        padding: 1rem;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-y: contain;
+    }
 
     /* Messages plus larges sur mobile */
-    .message-bubble { max-width: 85%; }
+    .message-bubble {
+        max-width: 88%;
+        font-size: 0.9rem;
+    }
 
-    .message-input-wrapper { padding: 0.75rem 1rem; gap: 0.5rem; }
+    .message-input-wrapper {
+        padding: 0.75rem 1rem;
+        gap: 0.5rem;
+    }
 
-    /* Bouton envoyer réduit sur mobile */
     .message-send-btn {
         padding: 0.75rem 1rem;
         font-size: 0.85rem;
     }
 
-    /* Texte du bouton envoyer caché sur très petit écran */
     .send-btn-text { display: none; }
 }
 
 @media (max-width: 400px) {
-    .message-bubble { max-width: 90%; font-size: 0.9rem; }
-    .message-input { font-size: 0.9rem; padding: 0.65rem 1rem; }
+    .message-bubble { max-width: 92%; font-size: 0.88rem; }
+    .message-input { padding: 0.65rem 1rem; }
+    .chat-header h2 { font-size: 1rem; }
 }
