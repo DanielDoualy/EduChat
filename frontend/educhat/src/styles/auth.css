@@ -4,31 +4,30 @@
     padding: 0;
 }
 
+html {
+    height: 100%;
+}
+
 body {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
         Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     background-color: #dedede;
-    min-height: 100vh;
-    min-height: 100dvh;
-    /* Scroll natif iOS */
-    -webkit-overflow-scrolling: touch;
+    min-height: 100%;
+    /* Aucun overflow hidden — laisse iOS scroller librement */
 }
 
 .register-page {
     min-height: 100vh;
-    min-height: 100dvh;
     display: flex;
     flex-direction: column;
     padding: 1.5rem 2rem;
-    /* Permet le scroll sur iOS */
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
 }
 
 .logo {
     font-size: 30px;
     font-weight: bold;
     color: #111;
+    flex-shrink: 0;
 }
 
 .register-wrapper {
@@ -36,7 +35,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 1rem 0;
+    padding: 1.5rem 0 2rem 0;
 }
 
 .register-div {
@@ -77,14 +76,17 @@ body {
     border: 1.5px solid #ccc;
     border-radius: 12px;
     padding: 0.65rem 1rem;
-    font-size: max(16px, 0.9rem);
+    /* min 16px pour eviter le zoom auto iOS */
+    font-size: 16px;
     color: #333;
     outline: none;
     width: 100%;
-    height: 48px;
+    height: 50px;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    /* Supprime le style natif iOS */
     -webkit-appearance: none;
     appearance: none;
+    background-color: white;
 }
 
 .last-name::placeholder,
@@ -113,7 +115,7 @@ body {
     color: white;
     cursor: pointer;
     width: 161px;
-    height: 48px;
+    height: 50px;
     font-size: 1rem;
     font-weight: 500;
     align-self: center;
@@ -121,6 +123,8 @@ body {
     transition: background-color 0.2s;
     display: block;
     -webkit-tap-highlight-color: transparent;
+    -webkit-appearance: none;
+    appearance: none;
 }
 
 .send-button:hover { background-color: #43a047; }
@@ -202,13 +206,11 @@ body {
 @media (max-width: 768px) {
     .register-page {
         padding: 1.2rem 1rem;
-        justify-content: flex-start;
-        align-items: stretch;
     }
 
     .register-wrapper {
         align-items: flex-start;
-        padding: 1rem 0 2rem 0;
+        padding: 1rem 0 3rem 0;
     }
 
     .register-div {
@@ -229,7 +231,7 @@ body {
     .last-name, .first-name, .level,
     .email, .password, .username {
         height: 52px;
-        font-size: max(16px, 1rem);
+        font-size: 16px;
     }
 }
 
